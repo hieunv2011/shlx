@@ -1,0 +1,12 @@
+export { default as Testing } from './Testing';
+export { default as Login } from './Login';
+export { default as Signup } from './Signup';
+export { default as Userprofile} from './Userprofile';
+export { default as Traineeprofile} from './Traineeprofile';
+export {default as Course } from './Course';
+export {default as Session } from './Session';
+export { default as Coursedetail} from './Coursedetail';
+export {default as Sessiondetail } from './Sessiondetail';
+export { default as TraneesSession } from './TraneesSession';
+export { default as TraneesSessionList} from './TrainnesSessionList';
+export { default as Basic} from './Basic';
