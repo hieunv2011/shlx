@@ -12,6 +12,13 @@ module.exports = {
       fontSize: {
         14: '14px',
       },
+      container: {
+        centered: {
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+        },
+      },
       backgroundColor: {
         'main-bg': '#FAFBFB',
         'main-dark-bg': '#20232A',

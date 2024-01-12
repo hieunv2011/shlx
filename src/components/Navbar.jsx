@@ -31,27 +31,23 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="bg-blue-800 p-4 pl-72 lg:px-8 w-full ">
-      <div className="container mx-auto flex items-center justify-between">
-        {/* Logo or brand */}
+    <nav className="bg-blue-800 p-4 w-full ">
+      <div className=" mx-auto flex items-center justify-between">
         <button 
           onClick={()=> setActiveMenu((prevActiveMenu)=>!prevActiveMenu)}
-          className="text-white p-2">
+          className="text-white ml-0 p-2">
           <RxHamburgerMenu className="w-6 h-6" />
         </button>
         <div> 
           {currentScreen === "/testing" && <div className="text-2xl text-white">Danh sách học viên</div>}
           {currentScreen === "/course" && <div className="text-2xl text-white">Danh sách khoá học</div>}
         </div>
-        {/* Navigation links */}
         <div  className="text-white text-2xl ml-auto flex flex-row">
           <Link to="/userprofile">
             {data.name}
           </Link>
         </div>
         <FaRegUserCircle className="mr-2 ml-2 text-2xl text-white"/>
-        <img>
-        </img>
       </div>
     </nav>
   );

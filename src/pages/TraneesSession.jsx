@@ -22,7 +22,7 @@ const TraneesSession = () => {
 
   const baseCourseurl = "https://jira.shlx.vn/v1/courses/";
   const finalCourseurl = `${baseCourseurl}${course_id}`;
- 
+
   //Lấy data
   useEffect(() => {
     fetchData();
@@ -44,7 +44,7 @@ const TraneesSession = () => {
       });
       console.log(response);
       // Chuyển đổi start_time từ ISO 8601 sang "dd/MM/yyyy HH:mm:ss"
-        const formattedData = response.data.map((element) => {
+      const formattedData = response.data.map((element) => {
         const startTime = parseISO(element.start_time);
         const endTime = parseISO(element.end_time);
 
@@ -122,42 +122,27 @@ const TraneesSession = () => {
   return (
     <div>
       <Navbar />
-      <div ref={componentPDF} className="h-a4 w-a4  mt-4 ml-5 ">
-        <div className="flex flex-row items-center w-full pt-10 justify-center">
+      <button
+          className="px-4 py-2 bg-blue-700 text-white hover:bg-blue-800"
+          onClick={generatePDF}
+        >
+          Xuất file pdf
+        </button>
+      <div
+        ref={componentPDF}
+        className="h-a4 w-a4  mt-4 ml-5 border border-black"
+      >
+        <div className="flex flex-row items-center w-full pt-20 justify-center">
           <div className="flex flex-col  w-1/2 pr-4 items-center justify-center">
-            <h1 className="font-times font-bold text-xs">
-              CTY CP CÔNG NGHỆ SÁT HẠCH TOÀN PHƯƠNG
-            </h1>
-            <h1 className="font-times font-bold text-xs">
-              TRUNG TÂM ĐT VÀ SHLX VIỆT THANH{" "}
-            </h1>
-            <h1 className="font-times font-bold text-xs">***********</h1>
-          </div>
-          <div className="flex flex-col  w-1/2 pl-4 items-center justify-center">
-            <h1 className="font-times font-bold text-xs">
-              CỘNG HOÀ XÃ HỘI CHỦ NGHĨA VIỆT NAM
-            </h1>
-            <h1 className="font-times font-bold text-xs">
-              Độc lập - Tự do - Hạnh phúc{" "}
-            </h1>
-            <h1 className="font-times font-bold text-xs">***********</h1>
-          </div>
-        </div>
-
-        <div className="flex flex-row items-center w-full pt-10 justify-center">
-          <div className="flex flex-col  w-1/2 pr-4 items-center justify-center">
-            <h1 className="font-times font-bold text-xs">BÁO CÁO</h1>
-            <h1 className="font-times font-bold text-xs">
-              QUÁ TRÌNH ĐÀO TẠO CỦA HỌC VIÊN{" "}
-            </h1>
+            <h1 className="font-times font-bold text-xs">BÁO CÁO QUÁ TRÌNH ĐÀO TẠO CỦA HỌC VIÊN</h1>
             <h2 className="font-times font-bold text-xs">
               (Ngày báo cáo: ngày ... tháng ... năm ...)
             </h2>
-            <h2 className="font-times font-bold text-xs">
-              I. Thông tin học viên
-            </h2>
           </div>
         </div>
+        <h1 className="font-times font-bold text-xs ml-4">
+              I. Thông tin học viên
+        </h1>
         <div className="flex flex-row items-center ml-4 mr-4 border border-black h-32">
           <div className="flex flex-col ml-4 mt-0 ">
             <h1 className="text-sm font-times">Họ và tên: </h1>
@@ -188,14 +173,20 @@ const TraneesSession = () => {
             </h1>
           </div>
         </div>
-        <div className="flex flex-row items-center ml-4 mr-4 mt-28 h-32">
+        <div className="flex flex-row items-center ml-4 mr-4 mt-1 h-32">
           <table className="border-collapse border items-center border-black w-full ">
             <thead>
               <tr>
                 <th className="border font-times border-black">STT</th>
-                <th className="border font-times border-black">Phiên đào tạo</th>
-                <th className="border font-times border-black">Biển số xe tập lái</th>
-                <th className="border font-times border-black">Hạng xe tập lái</th>
+                <th className="border font-times border-black">
+                  Phiên đào tạo
+                </th>
+                <th className="border font-times border-black">
+                  Biển số xe tập lái
+                </th>
+                <th className="border font-times border-black">
+                  Hạng xe tập lái
+                </th>
                 <th className="border font-times border-black">Bắt đầu</th>
                 <th className="border font-times border-black">Kết thúc</th>
                 <th className="border font-times border-black">Quãng đường</th>
@@ -259,28 +250,12 @@ const TraneesSession = () => {
             </tfoot>
           </table>
         </div>
-        <div className="flex items-center w-full pt-28 justify-center">
-          <div className="flex  w-1/2 pr-4 items-center justify-center">
-            <h1 className="font-times font-bold text-xs">
-              Tổng hợp kết quả: Quãng đường đào tạo:
-            </h1>
-            <h1 className="font-times font-bold text-xs">
-              {totalDistance.toLocaleString("en-US", {})}
-            </h1>
-          </div>
-        </div>
       </div>
       <div className="m-4 place-content-center">
-        <button
-          className="px-4 py-2 bg-blue-700 text-white hover:bg-blue-800"
-          onClick={generatePDF}
-        >
-          Xuất file pdf
-        </button>
+
       </div>
     </div>
   );
 };
-
 
 export default TraneesSession;

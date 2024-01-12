@@ -25,8 +25,8 @@ function App() {
         <div className="dark:bg-main-dark-bg ">
           {/* Sideabar */}
           {activeMenu ? (
-            <div className="w-72 h-full fixed sidebar dark:bg-secondary-dark-bg
-             bg-black bg-opacity-75">
+            <div className="w-fit h-full fixed sidebar dark:bg-secondary-dark-bg
+             bg-black">
               <Sidebar />
             </div>
           ) : (
@@ -39,7 +39,6 @@ function App() {
               {/* Pages */}
               <Route index element={<Login />} />
               <Route path="/login" element={<Login />} />
-              <Route path="/basic" element={<Basic />}></Route>
               <Route path="/testing" element={<Testing />} />
               <Route path="/userprofile" element={<Userprofile />} />
               <Route path="/traineeprofile/:id" element={<Traineeprofile />} />

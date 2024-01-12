@@ -9,4 +9,3 @@ export { default as Coursedetail} from './Coursedetail';
 export {default as Sessiondetail } from './Sessiondetail';
 export { default as TraneesSession } from './TraneesSession';
 export { default as TraneesSessionList} from './TrainnesSessionList';
-export { default as Basic} from './Basic';

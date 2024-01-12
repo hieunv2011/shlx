@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useStateContext } from "../contexts/ContextProvider";
+import { IoIosCloseCircleOutline } from "react-icons/io";
 
-const TrainnesPopup = ({ traineeId, traineeName }) => {
+const TrainnesPopup = ({ traineeId, traineeName,onClose }) => {
   const { setActivePopup } = useStateContext();
   const [data, setData] = useState([]);
   const baseUrl = "https://jira.shlx.vn/v1/outdoor-sessions?trainee_id=";
   const finalUrl = `${baseUrl}${traineeId}`;
   const handleClose = () => {
-    setActivePopup(false);
+    onClose(); // Gọi hàm onClose từ Testing component
   };
-
   useEffect(() => {
     fetchData();
   }, [traineeId]);
@@ -44,7 +44,12 @@ const TrainnesPopup = ({ traineeId, traineeName }) => {
   return (
     <div className="mr-0">
       {/* <h1 className="text-2xl font-bold mb-4 ml-4 ">{traineeName}</h1> */}
-      <div className="overflow-x-auto max-h-[1000px]">
+      <div className="overflow-x-auto max-h-[680px]">
+        <div className="flex items-center justify-between mb-4">
+        <h1 className="font-semibold text-2xl pl-2">{traineeName}</h1>
+        <IoIosCloseCircleOutline className="text-3xl cursor-pointer" onClick={handleClose}/>
+        </div>
+
         <table className="border-collapse border w-full">
           <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
             <tr>
@@ -87,9 +92,6 @@ const TrainnesPopup = ({ traineeId, traineeName }) => {
                 </td>
                 <td className="border p-2 border-black">
                   <ul>{element.duration}</ul>
-                </td>
-                <td className="border p-2 border-black">
-                  <ul>{element.id}</ul>
                 </td>
               </tr>
             ))}

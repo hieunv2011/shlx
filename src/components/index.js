@@ -4,3 +4,4 @@ export {default as Sidebar} from './Sidebar';
 export {default as Footer} from './Footer';
 export {default as ButtonLogout} from './ButtonLogout';
 export {default as TrainnesPopup} from './TrainnesPopup';
+export {default as TraineesSearch} from './TraineesSearch';
