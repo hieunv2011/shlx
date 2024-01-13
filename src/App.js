@@ -11,7 +11,8 @@ import {
   Session,
   Coursedetail,
   TraneesSession,
-  Basic
+  Basic,
+  DatDevice
 } from "./pages";
 import { Footer, Navbar } from "./components";
 import { Sidebar } from "./components";
@@ -44,6 +45,7 @@ function App() {
               <Route path="/traineeprofile/:id" element={<Traineeprofile />} />
               <Route path="/course" element={<Course />}></Route>
               <Route path="/session" element={<Session />}></Route>
+              <Route path="datdevice" element={<DatDevice/>} ></Route>
               <Route
                 path="/coursedetail/:id"
                 element={<Coursedetail />}

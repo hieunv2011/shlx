@@ -94,7 +94,7 @@ const Sidebar = () => {
               {dropdownStates.heThong && (
                 <ul className="mt-2">
                   <li className="hover:bg-gray-700 py-1 px-12 cursor-pointer text-white">
-                    Thiết bị DAT 1
+                    <Link to="/datdevice">Thiết bị DAT </Link>
                   </li>
                   <li className="hover:bg-gray-700 py-1 px-12 cursor-pointer text-white">
                     Xe tập lái
