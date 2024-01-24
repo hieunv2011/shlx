@@ -67,7 +67,6 @@ const TraneesSession = () => {
           duration: duration,
         };
       });
-
       setData(formattedData);
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -166,14 +165,10 @@ const TraneesSession = () => {
             className="pl-10 h-28"
           />
         </div>
-        <div className="flex flex-row items-center w-full pt-4 justify-center">
-          <div className="flex flex-col  w-1/2 pr-4 items-center justify-center">
-            <h1 className="font-times font-bold text-xs">
+        <h1 className="font-times font-bold text-xs ml-4">
               II. Thông tin quá trình đào tạo
-            </h1>
-          </div>
-        </div>
-        <div className="flex flex-row items-center ml-4 mr-4 mt-1 h-32">
+        </h1>
+        <div className="flex flex-row items-center ml-4 mr-4 mt-24 h-32">
           <table className="border-collapse border items-center border-black w-full ">
             <thead>
               <tr>
@@ -228,7 +223,7 @@ const TraneesSession = () => {
                     <td className="border font-times border-black">
                       <ul>{element.duration}</ul>
                     </td>
-                    <td className="border font-times border-black">
+                    <td className="border font-times border-black">ngoc chi le
                       <ul>Đã kết thúc</ul>
                     </td>
                   </tr>

@@ -97,10 +97,10 @@ const Sidebar = () => {
                     <Link to="/datdevice">Thiết bị DAT </Link>
                   </li>
                   <li className="hover:bg-gray-700 py-1 px-12 cursor-pointer text-white">
-                    Xe tập lái
+                    <Link to="/trainningcar">Xe tập lái </Link>
                   </li>
                   <li className="hover:bg-gray-700 py-1 px-12 cursor-pointer text-white">
-                    Danh sách thẻ
+                    <Link to="/rfcard">Danh sách thẻ</Link>
                   </li>
                   <li className="hover:bg-gray-700 py-1 px-12 cursor-pointer text-white">
                     Danh sách giáo viên

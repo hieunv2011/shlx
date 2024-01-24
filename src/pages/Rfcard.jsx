@@ -4,7 +4,7 @@ import axios from "axios";
 import { Footer, Navbar, TraineesSearch } from "../components";
 import { CiEdit } from "react-icons/ci";
 
-const DatDevice = () => {
+const Rfcard = () => {
   const [data, setData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -15,7 +15,7 @@ const DatDevice = () => {
     try {
       const token = localStorage.getItem("userToken"); // Replace with your actual token
       const response = await axios.get(
-        `https://jira.shlx.vn/v1/tracking_devices?&page=${currentPage}`,
+        `https://jira.shlx.vn/v1/rfcards?&page=${currentPage}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -57,37 +57,18 @@ const DatDevice = () => {
                 <tr>
                   <th scope="col" className="px-1 py-3"></th>
                   <th scope="col" className="px-6 py-3">
-                    TÊN
+                    ID THẺ
                   </th>
                   <th scope="col" className="py-3">
-                    SERIAL
+                    SỐ THẺ
                   </th>
                   <th scope="col" className="px-6 py-3">
-                    BOARD
-                  </th>
-                  <th scope="col" className="px-6 py-3">
-                    VERSION
-                  </th>
-                  <th scope="col" className="px-6 py-3">
-                    NEW VERSION
-                  </th>
-                  <th scope="col" className="px-6 py-3">
-                    XE
-                  </th>
-                  <th scope="col" className="px-6 py-3">
-                    MODEL
-                  </th>
-                  <th scope="col" className="px-6 py-3">
-                    HẠNG
-                  </th>
-                  <th scope="col" className="px-6 py-3">
-                    SIM
+                    LOẠI THẺ
                   </th>
                   <th scope="col" className="px-6 py-3">
                     TRẠNG THÁI
                   </th>
                   <th scope="col" className="px-6 py-3">
-                    CHỈNH SỬA
                   </th>
                 </tr>
               </thead>
@@ -101,38 +82,17 @@ const DatDevice = () => {
                     </td>
                     <td className="px-4 font-semibold text-gray-900 dark:text-white border">
                       <Link className="text-blue-800 cursor-pointer ">
-                        {element.name}
+                        {element.card_name}
                       </Link>
                     </td>
                     <td className="px-4 border  justify-center">
-                      {element.serial_no}
+                      {element.card_num}
                     </td>
-                    <td className="border px-4 ">{element.board_serial}</td>
-                    <td className="border px-4">{element.firmware}</td>
+                    <td className="border px-4 ">{element.type}</td>
+                    <td className="border px-4">{element.status}</td>
                     <td className="border px-4">
                       {element.config && parseConfig(element.config)}
-                    </td>
-                    <td className="px-4 border">{element.vehicle_plate}</td>
-                    <td className="px-4 border">{element.vehicle_model}</td>
-                    <td className="px-4 border">{element.vehicle_hang}</td>
-                    <td className="px-4 border">{element.sim}</td>
-                    <td className="border">
-                      <div
-                        className={`text-white font-semibold border m-2 ${
-                          element.status ? "bg-green-500" : "bg-orange-500"
-                        }`}
-                      >
-                        {element.status ? "Đang hoạt động" : "Không hoạt động"}
-                      </div>
-                    </td>
-                    <td className="px-4 border">
-                      <button
-                        type="button"
-                        className="text-xl rounded-full p-3 hover:bg-gray-200 mt-4 block text-blue-800"
-                      >
-                        <CiEdit />
-                      </button>
-                    </td>
+                    </td>                    
                   </tr>
                 ))}
               </tbody>
@@ -249,4 +209,4 @@ const DatDevice = () => {
   }
 };
 
-export default DatDevice;
+export default Rfcard;

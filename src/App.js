@@ -12,7 +12,9 @@ import {
   Coursedetail,
   TraneesSession,
   Basic,
-  DatDevice
+  DatDevice,
+  TrainningCar,
+  Rfcard,
 } from "./pages";
 import { Footer, Navbar } from "./components";
 import { Sidebar } from "./components";
@@ -26,13 +28,14 @@ function App() {
         <div className="dark:bg-main-dark-bg ">
           {/* Sideabar */}
           {activeMenu ? (
-            <div className="w-fit h-full fixed sidebar dark:bg-secondary-dark-bg
-             bg-black">
+            <div
+              className="w-fit h-full fixed sidebar dark:bg-secondary-dark-bg
+             bg-black"
+            >
               <Sidebar />
             </div>
           ) : (
-            <div className="w-0  dark:bg-secondary-dark-bg">
-            </div>
+            <div className="w-0  dark:bg-secondary-dark-bg"></div>
           )}
           {/*  */}
           <div>
@@ -45,7 +48,9 @@ function App() {
               <Route path="/traineeprofile/:id" element={<Traineeprofile />} />
               <Route path="/course" element={<Course />}></Route>
               <Route path="/session" element={<Session />}></Route>
-              <Route path="datdevice" element={<DatDevice/>} ></Route>
+              <Route path="/datdevice" element={<DatDevice />}></Route>
+              <Route path="/trainningcar" element={<TrainningCar />}></Route>
+              <Route path="/rfcard" element={<Rfcard />}></Route>
               <Route
                 path="/coursedetail/:id"
                 element={<Coursedetail />}
@@ -55,6 +60,9 @@ function App() {
                 element={<TraneesSession />}
               ></Route>
             </Routes>
+          </div>
+          <div className="fixed bottom-0 w-full">
+            <Footer />
           </div>
         </div>
       </Router>

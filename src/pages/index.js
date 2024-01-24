@@ -10,3 +10,5 @@ export {default as Sessiondetail } from './Sessiondetail';
 export { default as TraneesSession } from './TraneesSession';
 export { default as TraneesSessionList} from './TrainnesSessionList';
 export { default as DatDevice} from './DatDevice';
+export { default as TrainningCar} from './TrainningCar';
+export { default as Rfcard} from './Rfcard';

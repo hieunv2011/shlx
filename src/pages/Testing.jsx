@@ -200,9 +200,7 @@ const Testing = ({ onSelect }) => {
           </div>
         </div>
       </div>
-      <div className="fixed bottom-0 w-full">
-      <Footer/>
-      </div>
+
     </div>
   );
 };
