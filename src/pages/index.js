@@ -12,3 +12,4 @@ export { default as TraneesSessionList} from './TrainnesSessionList';
 export { default as DatDevice} from './DatDevice';
 export { default as TrainningCar} from './TrainningCar';
 export { default as Rfcard} from './Rfcard';
+export { default as TeacherList} from './TeacherList';

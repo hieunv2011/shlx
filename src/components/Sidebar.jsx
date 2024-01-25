@@ -94,16 +94,24 @@ const Sidebar = () => {
               {dropdownStates.heThong && (
                 <ul className="mt-2">
                   <li className="hover:bg-gray-700 py-1 px-12 cursor-pointer text-white">
+                    <button>
                     <Link to="/datdevice">Thiết bị DAT </Link>
+                    </button>
                   </li>
                   <li className="hover:bg-gray-700 py-1 px-12 cursor-pointer text-white">
+                    <button>
                     <Link to="/trainningcar">Xe tập lái </Link>
+                    </button>
                   </li>
                   <li className="hover:bg-gray-700 py-1 px-12 cursor-pointer text-white">
+                    <button>
                     <Link to="/rfcard">Danh sách thẻ</Link>
+                    </button>
                   </li>
                   <li className="hover:bg-gray-700 py-1 px-12 cursor-pointer text-white">
-                    Danh sách giáo viên
+                  <button>
+                    <Link to="/teacherlist">Danh sách giáo viên</Link>
+                    </button>
                   </li>
                 </ul>
               )}

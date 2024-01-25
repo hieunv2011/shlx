@@ -1,12 +1,13 @@
 import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
-import { Navbar } from "../components";
-import { Link } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import { format, parseISO, differenceInSeconds } from "date-fns";
 import { useReactToPrint } from "react-to-print";
-const TraneesSession = () => {
+import { Navbar } from "../components";
+
+const TraneesSession = ({ onPrint }) => {
   let totalDistance = 0;
+  let totalDuration = 0;
   const componentPDF = useRef();
 
   const { id, course_id, ma_dk } = useParams();
@@ -26,11 +27,7 @@ const TraneesSession = () => {
   //Lấy data
   useEffect(() => {
     fetchData();
-  }, []);
-  useEffect(() => {
     fetchUserData();
-  }, []);
-  useEffect(() => {
     fetchCourseData();
   }, []);
 
@@ -42,13 +39,11 @@ const TraneesSession = () => {
           Authorization: `Bearer ${token}`,
         },
       });
-      console.log(response);
-      // Chuyển đổi start_time từ ISO 8601 sang "dd/MM/yyyy HH:mm:ss"
+
       const formattedData = response.data.map((element) => {
         const startTime = parseISO(element.start_time);
         const endTime = parseISO(element.end_time);
 
-        // Tính thời gian giữa start_time và end_time (đơn vị: giây)
         const durationInSeconds = differenceInSeconds(endTime, startTime);
         const hours = Math.floor(durationInSeconds / 3600);
         const minutes = Math.floor((durationInSeconds % 3600) / 60);
@@ -57,12 +52,9 @@ const TraneesSession = () => {
           minutes
         ).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
 
-        // Chuyển đổi thời gian thành "giờ:phút"
-        //const duration = format(new Date(durationInSeconds * 1000), "HH:mm:ss");
-
         return {
           ...element,
-          start_time: format(startTime, "dd/MM/yyyy HH:mm:ss"),
+          start_time: format(startTime, "dd/MM/yyyy"),
           end_time: format(endTime, "dd/MM/yyyy HH:mm:ss"),
           duration: duration,
         };
@@ -75,16 +67,13 @@ const TraneesSession = () => {
 
   const fetchUserData = async () => {
     try {
-      const token = localStorage.getItem("userToken"); // Replace with your actual token
+      const token = localStorage.getItem("userToken");
       const responseUser = await axios.get(finalUserurl, {
         headers: {
           Authorization: `Bearer ${token}`,
-          // Add other headers if needed
         },
       });
       setUserdata(responseUser.data);
-      console.log("User: ");
-      console.log(responseUser);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -92,25 +81,18 @@ const TraneesSession = () => {
 
   const fetchCourseData = async () => {
     try {
-      const token = localStorage.getItem("userToken"); // Replace with your actual token
+      const token = localStorage.getItem("userToken");
       const responseCourse = await axios.get(finalCourseurl, {
         headers: {
           Authorization: `Bearer ${token}`,
-          // Add other headers if needed
         },
       });
       setCoursedata(responseCourse.data);
-      console.log("Course: ");
-      console.log(responseCourse);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
   };
 
-  const handleLinkClick = (id, ho_va_ten) => {
-    console.log(`Selected Trainee ID: ${id}, Name: ${ho_va_ten}`);
-    // You can perform additional actions here if needed
-  };
   const generatePDF = useReactToPrint({
     content: () => componentPDF.current,
     documentTitle: `Báo cáo quá trình đào tạo của học viên -${userdata.ho_va_ten}`,
@@ -118,29 +100,52 @@ const TraneesSession = () => {
       alert("Data saved in PDF");
     },
   });
+
+  //Tổng thời gian
+  let totalDurationInSeconds = 0;
+  data.forEach((element) => {
+    const [hoursStr, minutesStr, secondsStr] = element.duration.split(":");
+    totalDurationInSeconds +=
+      parseInt(hoursStr) * 3600 +
+      parseInt(minutesStr) * 60 +
+      parseInt(secondsStr);
+  });
+
+  const totalHours = Math.floor(totalDurationInSeconds / 3600);
+  const totalMinutes = Math.floor((totalDurationInSeconds % 3600) / 60);
+  const totalSeconds = totalDurationInSeconds % 60;
+
+  useEffect(() => {
+    if (onPrint) {
+      onPrint(generatePDF);
+    }
+  }, [onPrint, generatePDF]);
+
   return (
     <div>
-      <Navbar />
+      <Navbar/>
       <button
-          className="px-4 py-2 bg-blue-700 text-white hover:bg-blue-800"
-          onClick={generatePDF}
-        >
-          Xuất file pdf
-        </button>
+        className="px-4 py-2 bg-blue-700 text-white hover:bg-blue-800"
+        onClick={generatePDF}
+      >
+        Xuất file pdf
+      </button>
       <div
         ref={componentPDF}
-        className="h-a4 w-a4  mt-4 ml-5 border border-black"
+        className="h-a4 w-a4 mt-4 ml-8 border border-black pl-24 pr-10"
       >
-        <div className="flex flex-row items-center w-full pt-20 justify-center">
+        <div className="flex flex-row items-center w-full pt-28 justify-center">
           <div className="flex flex-col  w-1/2 pr-4 items-center justify-center">
-            <h1 className="font-times font-bold text-xs">BÁO CÁO QUÁ TRÌNH ĐÀO TẠO CỦA HỌC VIÊN</h1>
+            <h1 className="font-times font-bold text-xs">
+              BÁO CÁO QUÁ TRÌNH ĐÀO TẠO CỦA HỌC VIÊN
+            </h1>
             <h2 className="font-times font-bold text-xs">
               (Ngày báo cáo: ngày ... tháng ... năm ...)
             </h2>
           </div>
         </div>
         <h1 className="font-times font-bold text-xs ml-4">
-              I. Thông tin học viên
+          I. Thông tin học viên
         </h1>
         <div className="flex flex-row items-center ml-4 mr-4 border border-black h-32">
           <div className="flex flex-col ml-4 mt-0 ">
@@ -166,7 +171,7 @@ const TraneesSession = () => {
           />
         </div>
         <h1 className="font-times font-bold text-xs ml-4">
-              II. Thông tin quá trình đào tạo
+          II. Thông tin quá trình đào tạo
         </h1>
         <div className="flex flex-row items-center ml-4 mr-4 mt-24 h-32">
           <table className="border-collapse border items-center border-black w-full ">
@@ -179,22 +184,17 @@ const TraneesSession = () => {
                 <th className="border font-times border-black">
                   Biển số xe tập lái
                 </th>
-                <th className="border font-times border-black">
-                  Hạng xe tập lái
-                </th>
-                <th className="border font-times border-black">Bắt đầu</th>
-                <th className="border font-times border-black">Kết thúc</th>
-                <th className="border font-times border-black">Quãng đường</th>
+                <th className="border font-times border-black">Ngày đào tạo</th>
                 <th className="border font-times border-black">Thời gian</th>
-                <th className="border font-times border-black">Trạng thái</th>
+                <th className="border font-times border-black">Quãng đường</th>
               </tr>
             </thead>
             <tbody>
               {data.map((element, index) => {
-                // Parse distance to a float
                 const distance = parseFloat(element.distance);
-                // Add the distance to the total
+                const duration = parseFloat(element.duration);
                 totalDistance += distance;
+                totalDuration += duration;
                 return (
                   <tr key={index}>
                     <td className="border font-times border-black ">
@@ -206,25 +206,16 @@ const TraneesSession = () => {
                     <td className="border font-times border-black">
                       <ul>{element.vehicle_plate}</ul>
                     </td>
-                    <td className="border font-times border-black text-center">
-                      <ul>{element.vehicle_hang}</ul>
-                    </td>
                     <td className="border font-times border-black">
                       <ul>{element.start_time}</ul>
                     </td>
                     <td className="border font-times border-black">
-                      <ul>{element.end_time}</ul>
+                      <ul>{element.duration}</ul>
                     </td>
                     <td className="border font-times border-black">
                       <ul>
                         {parseFloat(element.distance).toLocaleString("en-US")}
                       </ul>
-                    </td>
-                    <td className="border font-times border-black">
-                      <ul>{element.duration}</ul>
-                    </td>
-                    <td className="border font-times border-black">ngoc chi le
-                      <ul>Đã kết thúc</ul>
                     </td>
                   </tr>
                 );
@@ -233,10 +224,13 @@ const TraneesSession = () => {
             <tfoot>
               <tr>
                 <td
-                  colSpan="6"
+                  colSpan="4"
                   className="border p-2 border-black text-right font-bold font-times"
                 >
                   Tổng quãng đường:
+                </td>
+                <td className="border p-2 border-black font-times font-bold">
+                  {totalHours}:{totalMinutes < 10 ? '0' + totalMinutes : totalMinutes}:{totalSeconds < 10 ? '0' + totalSeconds : totalSeconds}
                 </td>
                 <td className="border p-2 border-black font-times font-bold">
                   {totalDistance.toLocaleString("en-US", {})}
@@ -245,9 +239,6 @@ const TraneesSession = () => {
             </tfoot>
           </table>
         </div>
-      </div>
-      <div className="m-4 place-content-center">
-
       </div>
     </div>
   );

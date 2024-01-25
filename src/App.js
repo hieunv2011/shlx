@@ -15,6 +15,7 @@ import {
   DatDevice,
   TrainningCar,
   Rfcard,
+  TeacherList,
 } from "./pages";
 import { Footer, Navbar } from "./components";
 import { Sidebar } from "./components";
@@ -51,6 +52,7 @@ function App() {
               <Route path="/datdevice" element={<DatDevice />}></Route>
               <Route path="/trainningcar" element={<TrainningCar />}></Route>
               <Route path="/rfcard" element={<Rfcard />}></Route>
+              <Route path="/teacherlist" element={<TeacherList />}></Route>
               <Route
                 path="/coursedetail/:id"
                 element={<Coursedetail />}

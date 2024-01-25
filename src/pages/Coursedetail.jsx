@@ -11,6 +11,18 @@ const Coursedetail = () => {
   const baseUrl = `https://jira.shlx.vn/v1/trainees?course_id=${id}&page=`;
   const finalUrl = `${baseUrl}${myVariable}`;
 
+  const [printFunction, setPrintFunction] = useState(null);
+
+  const handlePrint = (generatePDF) => {
+    setPrintFunction(() => generatePDF);
+  };
+
+  const handlePrintClick = () => {
+    if (printFunction) {
+      printFunction();
+    }
+  };
+
   useEffect(() => {
     fetchData();
   }, [myVariable]);
@@ -110,6 +122,9 @@ const Coursedetail = () => {
                   </td>
                   <td className="border p-2 border-black justify-center">
                     <img src={element.anh_chan_dung} className="w-16 mx-auto" alt={`Avatar ${element.ho_va_ten}`} />
+                  </td>
+                  <td className="border p-2 border-black">
+                    <ul><button onClick={handlePrintClick}>In PDF</button></ul>
                   </td>
                 </tr>
               ))}

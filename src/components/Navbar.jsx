@@ -42,6 +42,8 @@ const Navbar = () => {
           {currentScreen === "/testing" && <div className="text-2xl text-white">Danh sách học viên</div>}
           {currentScreen === "/course" && <div className="text-2xl text-white">Danh sách khoá học</div>}
           {currentScreen === "/datdevice" && <div className="text-2xl text-white">Thiết bị DAT</div>}
+          {currentScreen === "/trainningcar" && <div className="text-2xl text-white">Xe tập lái</div>}
+          {currentScreen === "/teacherlist" && <div className="text-2xl text-white">Danh sách giáo viên</div>}
         </div>
         <div  className="text-white text-2xl ml-auto flex flex-row">
           <Link to="/userprofile">
