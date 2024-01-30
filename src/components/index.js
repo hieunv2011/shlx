@@ -7,3 +7,4 @@ export {default as TrainnesPopup} from './TrainnesPopup';
 export {default as TraineesSearch} from './TraineesSearch';
 export {default as Body} from './Body';
 export {default as Header} from './Header';
+export {default as CourseSearch} from './CourseSearch';

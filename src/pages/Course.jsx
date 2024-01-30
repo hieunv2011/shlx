@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { Navbar, Footer } from "../components";
+import { Navbar, Footer, TraineesSearch } from "../components";
 import { Link } from "react-router-dom";
-import { AiFillCaretRight, AiFillCaretLeft } from "react-icons/ai";
-
+import { format } from "date-fns";
+import { AiOutlineCheck, AiOutlineClose } from "react-icons/ai";
 const Course = () => {
   const [data, setData] = useState([]);
   const [myVariable, setMyVariable] = useState(1);
@@ -15,14 +15,11 @@ const Course = () => {
   const fetchData = async () => {
     try {
       const token = localStorage.getItem("userToken");
-      const response = await axios.get(
-        `https://jira.shlx.vn/v1/courses`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response = await axios.get(`https://jira.shlx.vn/v1/courses`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       setData(response.data.items);
       console.log(response);
     } catch (error) {
@@ -47,88 +44,116 @@ const Course = () => {
   return (
     <div>
       <Navbar />
-      <div className="flex pl-72 flex-col min-h-screen">
-        <div className="overflow-x-auto w-11/12 max-h-screen mt-4">
-          <table className="border-collapse border w-full">
-            <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-              <tr>
-                <th scope="col" className="px-1 py-3">
-                  STT
-                </th>
-                <th scope="col" className="px-6 py-3">
-                  Mã khoá học
-                </th>
-                <th scope="col" className="px-6 py-3">
-                  Tên khoá học
-                </th>
-                <th scope="col" className="px-6 py-3">
-                  Số học sinh
-                </th>
-                <th scope="col" className="px-6 py-3">
-                  Tên cơ sở đào tạo
-                </th>
-                <th scope="col" className="px-6 py-3">
-                  Tên sở GTVT
-                </th>
-                <th scope="col" className="px-6 py-3">
-                  Thời gian đào tạo
-                </th>
-                <th scope="col" className="px-6 py-3">
-                  ID
-                </th>
-              </tr>
-            </thead>
-            <tbody className="text-sm">
-              {data.map((element, index) => (
-                <tr key={index}>
-                  <td className="py-4 font-semibold text-gray-900 dark:text-white border border-black">
-                    <ul className="flex items-center justify-center">
-                      {index + 1}
-                    </ul>
-                  </td>
-                  <td className="p-2 font-semibold text-gray-900 dark:text-white border border-black" key={element.id}>
-                    <Link
-                      className="text-blue-800 underline cursor-pointer"
-                      to={`/coursedetail/${element.id}`}
-                      onClick={() => handleLinkClick(element.id, element.ma_khoa_hoc)}
-                    >
-                      {element.ma_khoa_hoc}
-                    </Link>
-                  </td>
-                  <td className="border p-2 border-black">
-                    <ul>{element.ten_khoa_hoc}</ul>
-                  </td>
-                  <td className="border p-2 border-black">
-                    <ul>{element.so_hoc_sinh}</ul>
-                  </td>
-                  <td className="border p-2 border-black">
-                    <ul>{element.ten_csdt}</ul>
-                  </td>
-                  <td className="border p-2 border-black">
-                    <ul>{element.ten_so_gtvt}</ul>
-                  </td>
-                  <td className="border p-2 border-black">
-                    <ul>{element.thoi_gian_dt}</ul>
-                  </td>
-                  <td className="border p-2 border-black">
-                    <ul>{element.id}</ul>
-                  </td>
+      <div className="ml-48 bg-slate-100">
+        <TraineesSearch />
+        <div>
+          <div
+            className={`overflow-x-auto  overflow-y-auto w-full h-[690px] mt-0 `}
+          >
+            <table className="border-collapse border w-full">
+              <thead
+                className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400 
+              justify-center items-center"
+              >
+                <tr>
+                  <th scope="col" className="px-1 py-3"></th>
+                  <th scope="col" className="px-6 py-3">
+                    MÃ KHOÁ HỌC
+                  </th>
+                  <th scope="col" className="px-6 py-3">
+                    TÊN KHOÁ HỌC
+                  </th>
+                  <th scope="col" className="px-6 py-3">
+                    HẠNG
+                  </th>
+                  <th scope="col" className="px-6 py-3">
+                    HẠNG GP
+                  </th>
+                  <th scope="col" className="px-6 py-3">
+                    SỐ BCI
+                  </th>
+                  <th scope="col" className="px-6 py-3">
+                    NGÀY BCI
+                  </th>
+                  <th scope="col" className="px-6 py-3">
+                    KHAI GIẢNG
+                  </th>
+                  <th scope="col" className="px-6 py-3 border">
+                    BẾ GIẢNG
+                  </th>
+                  <th scope="col" className="px-6 py-3 border">
+                    SỐ HS
+                  </th>
+                  <th scope="col" className="px-6 py-3 border">
+                    QĐKG
+                  </th>
+                  <th scope="col" className="px-6 py-3 border">
+                    THỜI GIAN
+                  </th>
+                  <th scope="col" className="px-6 py-3 border">
+                    TRẠNG THÁI
+                  </th>
+                  <th scope="col" className="px-6 py-3 border">
+                    ĐỒNG BỘ
+                  </th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-        {/* <div className="mx-auto mb-4">
-          <div className="flex items-center">
-            <button className="text-blue-800 cursor-pointer" onClick={decreaseVariable} disabled={myVariable === 1}>
-              <AiFillCaretLeft size={20} />
-            </button>
-            <span className="mx-4 text-xl text-blue-800 cursor-pointer"> {myVariable}</span>
-            <button className="text-blue-800" onClick={increaseVariable}>
-              <AiFillCaretRight size={20} />
-            </button>
+              </thead>
+              <tbody className="text-sm ">
+                {data.map((element, index) => (
+                  <tr key={index} className="">
+                    <td className="py-4 px-4 font-semibold text-gray-900 dark:text-white">
+                      <ul className="flex items-center justify-center">
+                        {index + 1}
+                      </ul>
+                    </td>
+                    <td className="px-4 border  justify-center">
+                      <Link
+                        className="text-blue-800 underline cursor-pointer"
+                        to={`/coursedetail/${element.id}`}
+                        onClick={() =>
+                          handleLinkClick(element.id, element.ma_khoa_hoc)
+                        }
+                      >
+                        {element.ma_khoa_hoc}
+                      </Link>
+                    </td>
+                    <td className="border px-4 ">{element.ten_khoa_hoc}</td>
+                    <td className="border px-4">{element.ma_hang_dao_tao}</td>
+                    <td className="border px-4">{element.hang_gplx}</td>
+                    <td className="border px-4">{element.so_bci}</td>
+                    <td className="border px-4">
+                      {format(new Date(element.ngay_bci), "dd/MM/yyyy")}
+                    </td>
+                    <td className="border px-4">
+                      {format(new Date(element.ngay_khai_giang), "dd/MM/yyyy")}
+                    </td>
+                    <td className="border px-4">
+                      {format(new Date(element.ngay_be_giang), "dd/MM/yyyy")}
+                    </td>
+                    <td className="border px-4">{element.so_hoc_sinh}</td>
+                    <td className="border px-4">{element.so_qd_kg}</td>
+                    <td className="border px-4">{element.thoi_gian_dt}</td>
+                    <td className="border px-4">
+                      {element.status === 3 && "Kết thúc"}
+                      {element.status === 2 && "Học thực hành"}
+                      {element.status === 1 && "Chưa diễn ra"}
+                    </td>
+                    <td className="border">
+                      <div className=" flex justify-center items-center">
+                        {element.synced ? (
+                          <AiOutlineCheck className="text-green-500" />
+                        ) : (
+                          <AiOutlineClose className="text-red-500" />
+                        )}
+                      </div>
+                    </td>
+                    <td className="border px-4">Icons</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
-        </div> */}
+        </div>
       </div>
       <Footer />
     </div>
