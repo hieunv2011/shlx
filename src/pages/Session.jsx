@@ -2,7 +2,9 @@ import React from 'react'
 
 const Session = () => {
   return (
-    <div>Session</div>
+    <div>
+      Session
+    </div>
   )
 }
 

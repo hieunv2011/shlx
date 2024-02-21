@@ -1,18 +1,25 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
-import { Footer, Navbar, TraineesSearch } from "../components";
+import { Footer, Navbar, TrainningCarSearch } from "../components";
 import { format, parseISO, differenceInSeconds } from "date-fns";
 import { FaOtter } from "react-icons/fa";
 const TrainningCar = () => {
+
   const [data, setData] = useState([]);
+  const [name, setName] = useState("");
+  const [submitStartDate, setSubmitStartDate]=useState("");
+  const [submitEndDate, setSubmitEndDate]=useState("");
+
+  const baseUrl="https://jira.shlx.vn/v1/vehicles?";
+  const finalUrl = `${baseUrl}plate=${name}&from_date=${submitStartDate}&to_date=${submitEndDate}`;
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [name,submitEndDate,submitStartDate]);
   const fetchData = async () => {
     try {
-      const token = localStorage.getItem("userToken"); // Replace with your actual token
-      const response = await axios.get(`https://jira.shlx.vn/v1/vehicles`, {
+      const token = localStorage.getItem("userToken");
+      const response = await axios.get(finalUrl, {
         headers: {
           Authorization: `Bearer ${token}`,
           // Add other headers if needed
@@ -24,11 +31,26 @@ const TrainningCar = () => {
       console.error("Error fetching data:", error);
     }
   };
+  const handleNameSubmit = (submittedName) => {
+    setName(submittedName);
+  };
+  const handleEndDateSubmit = (submittedEndDate) => {
+    setSubmitEndDate(submittedEndDate);
+  };
+  const handleStartDateSubmit = (submittedStartDate) => {
+    setSubmitStartDate(submittedStartDate);
+  };
+
+
+  
   return (
     <div className=" flex flex-col min-h-screen">
-      <Navbar />
-      <div className="ml-48  bg-slate-100 flex-1 ">
-        <TraineesSearch />
+      <div className="ml-12 flex-1 ">
+        <TrainningCarSearch 
+        onSubmitName={handleNameSubmit}
+        onSubmitEndDate={handleEndDateSubmit}
+        onSubmitStartDate={handleStartDateSubmit} />
+
         <div
           className={`overflow-x-auto  overflow-y-auto w-full h-[690px] mt-0 `}
         >

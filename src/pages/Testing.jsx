@@ -1,6 +1,12 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { AiOutlineCheck, AiOutlineClose } from "react-icons/ai";
+
+import { FaCheckCircle } from "react-icons/fa";
+import { IoIosCloseCircle } from "react-icons/io";
+import { FaUserEdit } from "react-icons/fa";
+import { TbFingerprintScan } from "react-icons/tb";
+import { FaRegFaceGrinWide } from "react-icons/fa6";
+import { format } from "date-fns";
 import {
   Footer,
   Navbar,
@@ -9,27 +15,27 @@ import {
   Sidebar,
 } from "../components";
 import { Link } from "react-router-dom";
-import { AiFillCaretRight, AiFillCaretLeft } from "react-icons/ai";
 import { useStateContext } from "../contexts/ContextProvider";
 import SplitPane, { Pane } from "split-pane-react";
 import "split-pane-react/esm/themes/default.css";
-import { Split } from "uiw";
+import { Pagination, Split } from "uiw";
 
 const Testing = ({ onSelect }) => {
   const [data, setData] = useState([]);
   const { activePopup, setActivePopup } = useStateContext();
   const [isPopupOpen, setIsPopupOpen] = useState(false);
-  const [tableWidth, setTableWidth] = useState("w-11/12");
   const [myVariable, setMyVariable] = useState(1);
   const [name, setName] = useState("");
   const [id, setId] = useState("");
   const [synced, setSynced] = useState(-1);
-  const [state,setState]=useState(-1);
-  const [course,setCourse]=useState("0");
+  const [state, setState] = useState(-1);
+  const [course, setCourse] = useState("0");
+  const [currentPage, setCurrentPage] = useState(1);
   const [selectedTrainee, setSelectedTrainee] = useState(null);
   const [sizes, setSizes] = useState([100, "30%", "auto"]);
   const baseUrl = "https://jira.shlx.vn/v1/trainees?";
-  const finalUrl = `${baseUrl}course_id=${course}&province_id=0&rf_card_name=${id}&synced=${synced}&status=${state}&page=${myVariable}`;
+  const finalUrl = `${baseUrl}course_id=${course}&province_id=0&rf_card_name=${id}&synced=${synced}&status=${state}&page=${myVariable}&name=${name}`;
+  // const finalUrl = `${baseUrl}course_id=${course}&province_id=0&rf_card_name=${id}&synced=${synced}&status=${state}&page=5&name=${name}`;
   const [searchTerm, setSearchTerm] = useState("");
 
   const togglePopup = () => {
@@ -53,24 +59,25 @@ const Testing = ({ onSelect }) => {
   // Lấy data
   useEffect(() => {
     fetchData();
-  }, [myVariable, name, id, synced,course]);
+  }, [myVariable, name, id, synced, course, currentPage ]);
 
   const fetchData = async () => {
     try {
       const token = localStorage.getItem("userToken"); // Replace with your actual token
-      const response = await axios.get(finalUrl, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          // Add other headers if needed
-        },
-      });
+      const response = await axios.get(finalUrl,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            // Add other headers if needed
+          },
+        }
+      );
       setData(response.data.items);
       console.log(response);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
   };
-
   const handleLinkClick = (id, ho_va_ten) => {
     console.log(`Selected Trainee ID: ${id}, Name: ${ho_va_ten}`);
     setSelectedTrainee({ id, ho_va_ten });
@@ -91,77 +98,140 @@ const Testing = ({ onSelect }) => {
     // console.log(finalUrl);
   };
   const handleSelectStatus = (selectedOption) => {
-    console.log(selectedOption.value);
-    setState(selectedOption.value);
+    //console.log(selectedOption.value);
+    setState(
+      selectedOption && selectedOption.value !== undefined
+        ? selectedOption.value
+        : -1
+    );
   };
   const handleSelectSynced = (selectedOption) => {
-    setSynced(selectedOption.value)
-    console.log(selectedOption.value);
+    setSynced(
+      selectedOption && selectedOption.value !== undefined
+        ? selectedOption.value
+        : -1
+    );
+    //console.log(selectedOption.value);
   };
-  const handleSubmitCourse =(selectedOption)=>{
-    setCourse(selectedOption.value);
-    console.log(selectedOption.value);
-  }
+  const handleSubmitCourse = (selectedOption) => {
+    setCourse(
+      selectedOption && selectedOption.value !== undefined
+        ? selectedOption.value
+        : 0
+    );
+    //console.log(selectedOption.value);
+  };
+
   return (
     <div className="flex flex-col">
-      <Navbar />
       <div className="flex pl-0 flex-col">
-        <div className="w-full">
-          <div className="ml-48 h-32 bg-slate-100">
+        <div className="bg-slate-100 pl-16">
+          <div className="ml-8 h-24 mt-6 ">
             <TraineesSearch
               onSubmitName={handleNameSubmit}
               onSubmitId={handleIdSubmit}
               onSelectStatus={handleSelectStatus}
               onSelectSynced={handleSelectSynced}
               onSubmitCourse={handleSubmitCourse}
-              
             />
           </div>
-
-          <Split
-            mode="horizontal"
-            style={{
-              borderRadius: 3,
-            }}
-            className="w-11/12  border border-inherit ml-48 "
-          >
-            <div className={tableWidth}>
-              <div className={`overflow-x-auto w-full h-[690px] mt-0`}>
-                <table className="border-collapse border w-full">
-                  <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+          <div className="bg-white min-w-screen ml-8 mr-0 rounded-xl max-w-[1920px]">
+            {/* <Split
+              mode="horizontal"
+              style={{
+                borderRadius: 3,
+              }}
+              className="w-[1327px] border border-inherit ml-8 "
+            > */}
+            <div className="w-full mb-16 rounded-xl">
+              <div className="w-full mt-0 p-5 mr-5">
+                <table className="border border-black">
+                  <thead>
                     <tr>
-                      <th scope="col" className="px-1 py-3"></th>
-                      <th scope="col" className="px-6 py-3">
-                        Tên liên lạc
+                      <th className="w-12 text-slate-600"></th>
+                      <th className="border border-black border-t-0 border-b-0 w-24 text-slate-600">
+                        Họ và tên
                       </th>
-                      <th scope="col" className="py-3">
+                      <th className="border border-black border-t-0 border-b-0 w-24 text-slate-600">
                         Ảnh
                       </th>
-                      <th scope="col" className="px-6 py-3">
+                      <th className="border border-black border-t-0 border-b-0 w-24 text-slate-600">
                         Mã đăng ký
                       </th>
-                      <th scope="col" className="px-6 py-3">
+                      <th className="border border-black border-t-0 border-b-0 w-24 text-slate-600">
+                        Hạng
+                      </th>
+                      <th className="border border-black border-t-0 border-b-0 w-24 text-slate-600">
+                        Giới tính
+                      </th>
+                      <th className="border border-black border-t-0 border-b-0 w-24 text-slate-600">
                         Ngày sinh
                       </th>
-                      <th scope="col" className="px-6 py-3">
+                      <th className="border border-black border-t-0 border-b-0 w-24 text-slate-600">
                         Số CMT
                       </th>
-                      <th scope="col" className="px-1 py-3">
+                      <th className="border border-black border-t-0 border-b-0 w-24 text-slate-600">
+                        ID thẻ
+                      </th>
+                      <th className="border border-black border-t-0 border-b-0 w-24 text-slate-600">
+                        Số thẻ
+                      </th>
+                      <th className="text-slate-600" colSpan={5}>
+                        Thực hành
+                      </th>
+                      <th
+                        className="border border-black text-slate-600"
+                        colSpan={2}
+                      >
+                        Đồng bộ phiên học
+                      </th>
+                      <th className="border border-black border-t-0 border-b-0 w-24 text-slate-600">
                         ĐỒNG BỘ
                       </th>
                     </tr>
+                    <tr>
+                      <th className="border border-black border-t-0 border-b-0 w-12 text-slate-600"></th>
+                      <th className="border border-black border-t-0 border-b-0 w-24 text-slate-600"></th>
+                      <th className="border border-black border-t-0 border-b-0 w-24 text-slate-600"></th>
+                      <th className="border border-black border-t-0 border-b-0 w-24 text-slate-600"></th>
+                      <th className="border border-black border-t-0 border-b-0 w-24 text-slate-600"></th>
+                      <th className="border border-black border-t-0 border-b-0 w-24 text-slate-600"></th>
+                      <th className="border border-black border-t-0 border-b-0 w-24 text-slate-600"></th>
+                      <th className="border border-black border-t-0 border-b-0 w-24 text-slate-600"></th>
+                      <th className="border border-black border-t-0 border-b-0 w-24 text-slate-600"></th>
+                      <th className="border border-black border-t-0 border-b-0 w-24 text-slate-600"></th>
+                      <th className="border border-black w-24 text-slate-600">
+                        Giờ
+                      </th>
+                      <th className="border border-black w-24 text-slate-600">
+                        KM
+                      </th>
+                      <th className="border border-black w-24 text-slate-600">
+                        Thiếu
+                      </th>
+                      <th className="border border-black w-24 text-slate-600">
+                        Giờ đêm
+                      </th>
+                      <th className="border border-black w-24 text-slate-600">
+                        Giờ TĐ
+                      </th>
+                      <th className="border border-black border-t-0 border-b-0 w-24 text-slate-600">
+                        Giờ
+                      </th>
+                      <th className="border border-black border-t-0 border-b-0 w-24 text-slate-600">
+                        KM
+                      </th>
+                      <th className="border border-black border-t-0 border-b-0 w-24 text-slate-600"></th>
+                    </tr>
                   </thead>
-                  <tbody className="text-sm">
+                  <tbody>
                     {data.map((element, index) => (
                       <tr key={index}>
-                        <td className="py-4 font-semibold text-gray-900 dark:text-white">
-                          <ul className="flex items-center justify-center">
-                            {index + 1}
-                          </ul>
+                        <td className="border border-black text-center w-12 px-2">
+                          <ul>{index + 1}</ul>
                         </td>
-                        <td className="font-semibold text-gray-900 dark:text-white border">
+                        <td className="border border-black text-center w-24">
                           <Link
-                            className="text-blue-800 cursor-pointer "
                             onClick={() =>
                               handleLinkClick(element.id, element.ho_va_ten)
                             }
@@ -169,28 +239,82 @@ const Testing = ({ onSelect }) => {
                             {element.ho_va_ten}
                           </Link>
                         </td>
-                        <td className="border  justify-center">
+                        <td className="border border-black w-24">
                           <Link
-                            className="text-blue-800 underline cursor-pointer "
                             onClick={() => console.log("Ấn ảnh")}
+                            className="flex items-center justify-center"
                           >
                             <img
                               src={element.anh_chan_dung}
-                              className="h-14 w-14 rounded-xl"
                               alt={`Avatar ${element.ho_va_ten}`}
+                              className="rounded-full w-14 h-14 object-cover"
                             />
                           </Link>
                         </td>
-                        <td className="border ">{element.ma_dk}</td>
-                        <td className="border ">{element.ngay_sinh}</td>
-                        <td className="border ">{element.so_cmt}</td>
-                        <td className="border">
-                          <div className=" flex justify-center items-center">
-                          {element.synced ? (
-                            <AiOutlineCheck className="text-green-500" />
-                          ) : (
-                            <AiOutlineClose className="text-red-500" />
-                          )}
+                        <td className="border border-black text-center w-24">
+                          {element.ma_dk}
+                        </td>
+                        <td className="border border-black text-center w-24">
+                          {element.hang_gplx}
+                        </td>
+                        <td className="border border-black text-center w-24 px-">
+                          {element.gioi_tinh === "F" ? "Nữ" : "Nam"}
+                        </td>
+                        <td className="border border-black text-center w-24 px-5">
+                          {format(new Date(element.ngay_sinh), "dd/MM/yyyy")}
+                        </td>
+                        <td className="border border-black text-center w-24">
+                          {element.so_cmt}
+                        </td>
+                        <td className="border border-black text-center w-24">
+                          {element.rfid_card_name}
+                        </td>
+                        <td className="border border-black text-center w-24">
+                          {element.rfid_card}
+                        </td>
+                        <td className="border border-black text-center w-24">
+                          {(element.outdoor_hour / 3600).toFixed(3)}
+                        </td>
+                        <td className="border border-black text-center w-24">
+                          {(element.outdoor_distance / 1000).toFixed(3)}
+                        </td>
+                        <td className="border border-black text-center w-24">
+                          {(
+                            element.required_hour -
+                            element.outdoor_hour / 3600
+                          ).toFixed(3)}
+                          /
+                          {(
+                            element.required_distance -
+                            element.outdoor_distance / 1000
+                          ).toFixed(3)}
+                        </td>
+                        <td className="border border-black text-center w-24">
+                          {(element.night_duration / 3600).toFixed(3)}
+                        </td>
+                        <td className="border border-black text-center w-24">
+                          {(element.auto_duration / 3600).toFixed(3)}
+                        </td>
+                        <td className="border border-black text-center w-24">
+                          {(element.synced_outdoor_hours / 3600).toFixed(3)}
+                        </td>
+                        <td className="border border-black text-center w-24">
+                          {(element.synced_outdoor_distance / 1000).toFixed(3)}
+                        </td>
+                        <td className="border border-black w-24">
+                          <div className="flex items-center justify-center">
+                            {element.synced ? (
+                              <FaCheckCircle className="text-green-500" />
+                            ) : (
+                              <IoIosCloseCircle className="text-xl text-red-600" />
+                            )}
+                          </div>
+                        </td>
+                        <td className="border border-black w-24 ">
+                          <div className="flex justify-between items-center space-x-3 text-xl">
+                            <FaUserEdit className="text-blue-500" />
+                            <TbFingerprintScan className="text-green-500" />
+                            <FaRegFaceGrinWide className="text-red-500" />
                           </div>
                         </td>
                       </tr>
@@ -199,35 +323,19 @@ const Testing = ({ onSelect }) => {
                 </table>
               </div>
             </div>
-            <div className={`${isPopupOpen ? "block" : "hidden"}`}>
-              {activePopup && selectedTrainee && (
-                <div className=" border border-inherit">
-                  <TrainnesPopup
-                    traineeId={selectedTrainee.id}
-                    traineeName={selectedTrainee.ho_va_ten}
-                    onClose={closePopup}
-                  />
-                </div>
-              )}
-            </div>
-          </Split>
-        </div>
-        <div className="mx-auto mb-4">
-          <div className="flex items-center">
-            <button
-              className="text-blue-800 cursor-pointer"
-              onClick={decreaseVariable}
-              disabled={myVariable === 1}
-            >
-              <AiFillCaretLeft size={20} />
-            </button>
-            <span className="mx-4 text-xl text-blue-800 cursor-pointer">
-              {" "}
-              {myVariable}
-            </span>
-            <button className="text-blue-800" onClick={increaseVariable}>
-              <AiFillCaretRight size={20} />
-            </button>
+
+            {/* <div className={`${isPopupOpen ? "block" : "hidden"}`}>
+                {activePopup && selectedTrainee && (
+                  <div className=" border border-inherit">
+                    <TrainnesPopup
+                      traineeId={selectedTrainee.id}
+                      traineeName={selectedTrainee.ho_va_ten}
+                      onClose={closePopup}
+                    />
+                  </div>
+                )}
+              </div>
+            </Split> */}
           </div>
         </div>
       </div>

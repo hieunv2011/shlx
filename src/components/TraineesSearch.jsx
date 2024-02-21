@@ -37,6 +37,14 @@ const TraineesSearch = ({ onSubmitName, onSubmitId, onSelectStatus,onSubmitCours
   };
 
   const handleSubmit = () => {
+    if (!name && !id && !selectedCourseOption && !selectedStatusOption && !selectedSyncOption) {
+      console.log("ê");
+      onSubmitCourse("");
+      onSubmitName("");
+      onSubmitId("")
+      onSelectStatus("-1")
+      onSelectSynced("-1");
+    }
     if (name) {
       onSubmitName(name);
     }
@@ -81,9 +89,9 @@ const TraineesSearch = ({ onSubmitName, onSubmitId, onSelectStatus,onSubmitCours
   };
 
   return (
-    <div className="flex items-center space-x-2">
-      <div className="my-6 px-1">
-        <h1 className="text-xl font-bold">Khoá học</h1>
+    <div className="flex items-center space-x-2 w-full">
+      <div className="my-3 px-1">
+        <h1 className="text-base font-bold">Khoá học</h1>
         <Select
           placeholder="Không xác định"
           value={selectedCourseOption}
@@ -105,7 +113,7 @@ const TraineesSearch = ({ onSubmitName, onSubmitId, onSelectStatus,onSubmitCours
         />
       </div>
       <div>
-        <h1 className="text-xl font-bold">Trạng thái</h1>
+        <h1 className="text-base font-bold">Trạng thái</h1>
         <Select
           placeholder="Tất cả"
           value={selectedStatusOption}
@@ -115,7 +123,7 @@ const TraineesSearch = ({ onSubmitName, onSubmitId, onSelectStatus,onSubmitCours
         />
       </div>
       <div>
-        <h1 className="text-xl font-bold ml-8">Họ tên / Mã ĐK / Số CMT</h1>
+        <h1 className="text-base font-bold ml-8">Họ tên / Mã ĐK / Số CMT</h1>
         <input
           type="text"
           placeholder="Tìm kiếm"
@@ -124,7 +132,7 @@ const TraineesSearch = ({ onSubmitName, onSubmitId, onSelectStatus,onSubmitCours
         />
       </div>
       <div>
-        <h1 className="text-xl font-bold ml-8">ID thẻ</h1>
+        <h1 className="text-base font-bold ml-8">ID thẻ</h1>
         <input
           type="text"
           placeholder="Tìm kiếm"
@@ -133,7 +141,7 @@ const TraineesSearch = ({ onSubmitName, onSubmitId, onSelectStatus,onSubmitCours
         />
       </div>
       <div>
-        <h1 className="text-xl font-bold ">Đồng bộ</h1>
+        <h1 className="text-base font-bold ">Đồng bộ</h1>
         <Select
           placeholder="Tất cả"
           value={selectedSyncOption}

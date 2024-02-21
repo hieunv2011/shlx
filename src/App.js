@@ -17,37 +17,31 @@ import {
   Rfcard,
   TeacherList,
 } from "./pages";
-import { Footer, Navbar } from "./components";
+import { Footer, Navbar, AnimatedSwitch } from "./components";
 import { Sidebar } from "./components";
 import { useStateContext } from "./contexts/ContextProvider";
+import { Navigation } from "./components/Navigation";
 
 function App() {
-  const { activeMenu } = useStateContext();
+  // const { activeMenu } = useStateContext();
   return (
-    <div>
+    <div className="flex flex-col">
       <Router>
-        <div className="dark:bg-main-dark-bg ">
-          {/* Sideabar */}
-          {activeMenu ? (
-            <div
-              className="w-fit h-full fixed sidebar dark:bg-secondary-dark-bg
-             bg-black"
-            >
-              <Sidebar />
-            </div>
-          ) : (
-            <div className="w-0  dark:bg-secondary-dark-bg"></div>
-          )}
-          {/*  */}
-          <div>
-            <Routes>
+        {/* Navigation cố định ở đầu trang */}
+        <div className="fixed top-0 z-10 w-full">
+          <Navigation />
+        </div>
+        
+        {/* Đặt padding-top cho container của Routes để tránh bị che khuất bởi Navigation */}
+        <div className="pt-10 dark:bg-main-dark-bg w-full">
+        <Routes>
               {/* Pages */}
-              <Route index element={<Login />} />
+              <Route index element={ <Login />} />
               <Route path="/login" element={<Login />} />
-              <Route path="/testing" element={<Testing />} />
+              <Route path="/testing" element={<AnimatedSwitch><Testing /></AnimatedSwitch>} />
               <Route path="/userprofile" element={<Userprofile />} />
               <Route path="/traineeprofile/:id" element={<Traineeprofile />} />
-              <Route path="/course" element={<Course />}></Route>
+              <Route path="/course" element={<AnimatedSwitch><Course /></AnimatedSwitch>}></Route>
               <Route path="/session" element={<Session />}></Route>
               <Route path="/datdevice" element={<DatDevice />}></Route>
               <Route path="/trainningcar" element={<TrainningCar />}></Route>
@@ -62,11 +56,11 @@ function App() {
                 element={<TraneesSession />}
               ></Route>
             </Routes>
-          </div>
-          {/* <div className="fixed bottom-0 w-full">
-            <Footer />
-          </div> */}
         </div>
+        
+        {/* <div className="fixed bottom-0 w-full ">
+          <Footer />
+        </div> */}
       </Router>
     </div>
   );

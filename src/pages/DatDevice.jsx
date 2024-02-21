@@ -1,21 +1,26 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
-import { Footer, Navbar, TraineesSearch } from "../components";
+import { Footer, Navbar, DatDeviceSearch } from "../components";
 import { CiEdit } from "react-icons/ci";
 
 const DatDevice = () => {
   const [data, setData] = useState([]);
+  const [name, setName] = useState("");
+  const [id, setId]= useState("");
+  const [mainboard,setMainboard]=useState("");
+  const [state, setState] = useState(-1);
   const [currentPage, setCurrentPage] = useState(1);
-
+  const baseUrl = "https://jira.shlx.vn/v1/tracking_devices?";
+  const finalUrl = `${baseUrl}name=${name}&status=${state}&serial_no=${id}&board_serial=${mainboard}`;
+  
   useEffect(() => {
     fetchData();
-  }, [currentPage]);
+  }, [name,state,id,mainboard]);
   const fetchData = async () => {
     try {
       const token = localStorage.getItem("userToken"); // Replace with your actual token
-      const response = await axios.get(
-        `https://jira.shlx.vn/v1/tracking_devices?&page=${currentPage}`,
+      const response = await axios.get(finalUrl,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -39,15 +44,37 @@ const DatDevice = () => {
       setCurrentPage(newPage);
     }
   };
-
+  const handleNameSubmit = (submittedName) => {
+    setName(submittedName);
+  };
+  const handleIdSubmit =(submittedId) =>{
+    setId(submittedId);
+  };
+  const handleMainboardSubmit=(submittedMainboard) =>{
+    setMainboard(submittedMainboard);
+    console.log(finalUrl);
+  };
+  const handleSelectStatus = (selectedOption) => {
+    
+    setState(
+      selectedOption && selectedOption.value !== undefined
+        ? selectedOption.value
+        : -1
+    );
+  };
+  
   return (
     <div>
-      <Navbar />
-      <div className="ml-48 bg-slate-100">
-        <TraineesSearch />
+      <div className="ml-8">
+        <DatDeviceSearch
+        onSubmitName={handleNameSubmit}
+        onSubmitId={handleIdSubmit}
+        onSubmitMainboard={handleMainboardSubmit}
+        onSelectStatus={handleSelectStatus}
+         />
         <div>
           <div
-            className={`overflow-x-auto  overflow-y-auto w-full h-[690px] mt-0 `}
+            className="overflow-y-auto w-full h-[690px] mt-0"
           >
             <table className="border-collapse border w-full">
               <thead
@@ -55,7 +82,7 @@ const DatDevice = () => {
               justify-center items-center"
               >
                 <tr>
-                  <th scope="col" className="px-1 py-3"></th>
+                  <th scope="col" className="px-6 py-3"></th>
                   <th scope="col" className="px-6 py-3">
                     TÊN
                   </th>
@@ -94,28 +121,28 @@ const DatDevice = () => {
               <tbody className="text-sm ">
                 {data.map((element, index) => (
                   <tr key={index} className="">
-                    <td className="py-4 px-4 font-semibold text-gray-900 dark:text-white">
+                    <td className="py-4 px-1 font-semibold text-gray-900 dark:text-white">
                       <ul className="flex items-center justify-center">
                         {index + 1}
                       </ul>
                     </td>
-                    <td className="px-4 font-semibold text-gray-900 dark:text-white border">
+                    <td className="px-1 font-semibold text-gray-900 dark:text-white border">
                       <Link className="text-blue-800 cursor-pointer ">
                         {element.name}
                       </Link>
                     </td>
-                    <td className="px-4 border  justify-center">
+                    <td className="px-1 border  justify-center">
                       {element.serial_no}
                     </td>
-                    <td className="border px-4 ">{element.board_serial}</td>
-                    <td className="border px-4">{element.firmware}</td>
-                    <td className="border px-4">
+                    <td className="border px-1 ">{element.board_serial}</td>
+                    <td className="border px-1">{element.firmware}</td>
+                    <td className="border px-1">
                       {element.config && parseConfig(element.config)}
                     </td>
-                    <td className="px-4 border">{element.vehicle_plate}</td>
-                    <td className="px-4 border">{element.vehicle_model}</td>
-                    <td className="px-4 border">{element.vehicle_hang}</td>
-                    <td className="px-4 border">{element.sim}</td>
+                    <td className="px-1 border">{element.vehicle_plate}</td>
+                    <td className="px-1 border">{element.vehicle_model}</td>
+                    <td className="px-1 border">{element.vehicle_hang}</td>
+                    <td className="px-1 border">{element.sim}</td>
                     <td className="border">
                       <div
                         className={`text-white font-semibold border m-2 ${
@@ -125,7 +152,7 @@ const DatDevice = () => {
                         {element.status ? "Đang hoạt động" : "Không hoạt động"}
                       </div>
                     </td>
-                    <td className="px-4 border">
+                    <td className="px-1 border">
                       <button
                         type="button"
                         className="text-xl rounded-full p-3 hover:bg-gray-200 mt-4 block text-blue-800"
@@ -139,14 +166,14 @@ const DatDevice = () => {
             </table>
           </div>
         </div>
-        <div>
+        {/* <div>
           <nav className="ml-[800px]">
             <ul class="flex items-center -space-x-px h-10 text-base">
               <li>
                 <a
                   onClick={() => handlePageClick(-1)}
                   href="#"
-                  class="flex items-center justify-center px-4 h-10 ms-0 leading-tight text-gray-500 bg-white border border-e-0 border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                  class="flex items-center justify-center px-1 h-10 ms-0 leading-tight text-gray-500 bg-white border border-e-0 border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
                 >
                   <span class="sr-only">Previous</span>
                   <svg
@@ -169,7 +196,7 @@ const DatDevice = () => {
               <li>
                 <a
                   href="#"
-                  class="flex items-center justify-center px-4 h-10 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                  class="flex items-center justify-center px-1 h-10 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
                 >
                   1
                 </a>
@@ -177,7 +204,7 @@ const DatDevice = () => {
               <li>
                 <a
                   href="#"
-                  class="flex items-center justify-center px-4 h-10 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                  class="flex items-center justify-center px-1 h-10 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
                 >
                   2
                 </a>
@@ -186,7 +213,7 @@ const DatDevice = () => {
                 <a
                   href="#"
                   aria-current="page"
-                  class="z-10 flex items-center justify-center px-4 h-10 leading-tight text-blue-600 border border-blue-300 bg-blue-50 hover:bg-blue-100 hover:text-blue-700 dark:border-gray-700 dark:bg-gray-700 dark:text-white"
+                  class="z-10 flex items-center justify-center px-1 h-10 leading-tight text-blue-600 border border-blue-300 bg-blue-50 hover:bg-blue-100 hover:text-blue-700 dark:border-gray-700 dark:bg-gray-700 dark:text-white"
                 >
                   3
                 </a>
@@ -194,7 +221,7 @@ const DatDevice = () => {
               <li>
                 <a
                   href="#"
-                  class="flex items-center justify-center px-4 h-10 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                  class="flex items-center justify-center px-1 h-10 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
                 >
                   4
                 </a>
@@ -202,7 +229,7 @@ const DatDevice = () => {
               <li>
                 <a
                   href="#"
-                  class="flex items-center justify-center px-4 h-10 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                  class="flex items-center justify-center px-1 h-10 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
                 >
                   5
                 </a>
@@ -211,7 +238,7 @@ const DatDevice = () => {
                 <a
                   href="#"
                   onClick={() => handlePageChange(+1)}
-                  class="flex items-center justify-center px-4 h-10 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                  class="flex items-center justify-center px-1 h-10 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
                 >
                   <span class="sr-only">Next</span>
                   <svg
@@ -233,7 +260,7 @@ const DatDevice = () => {
               </li>
             </ul>
           </nav>
-        </div>
+        </div> */}
       </div>
     </div>
   );

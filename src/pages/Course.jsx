@@ -1,23 +1,31 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { Navbar, Footer, TraineesSearch } from "../components";
+import { Navbar, Footer, TraineesSearch, CourseSearch } from "../components";
 import { Link } from "react-router-dom";
 import { format } from "date-fns";
 import { AiOutlineCheck, AiOutlineClose } from "react-icons/ai";
 const Course = () => {
   const [data, setData] = useState([]);
   const [myVariable, setMyVariable] = useState(1);
+  const [name, setName] = useState("");
+  const [id, setId] = useState("");
+  const [synced, setSynced] = useState(-1);
 
+  const baseUrl = "https://jira.shlx.vn/v1/courses?";
+  const finalUrl = `${baseUrl}&name=${name}&status=${synced}&ma=${id}`;
+
+  // Lấy data
   useEffect(() => {
     fetchData();
-  }, [myVariable]);
+  }, [myVariable, name, id, synced]);
 
   const fetchData = async () => {
     try {
-      const token = localStorage.getItem("userToken");
-      const response = await axios.get(`https://jira.shlx.vn/v1/courses`, {
+      const token = localStorage.getItem("userToken"); // Replace with your actual token
+      const response = await axios.get(finalUrl, {
         headers: {
           Authorization: `Bearer ${token}`,
+          // Add other headers if needed
         },
       });
       setData(response.data.items);
@@ -40,12 +48,29 @@ const Course = () => {
       setMyVariable(myVariable - 1);
     }
   };
+  const handleNameSubmit = (submittedName) => {
+    setName(submittedName);
+    console.log("Tên")
+    console.log(submittedName);
+  };
+  const handleIdSubmit = (submittedId) => {
+    setId(submittedId);
+    console.log(id);
+    console.log(finalUrl);
+  };
+  const handleSelectSynced = (selectedOption) => {
+    setSynced(selectedOption && selectedOption.value !== undefined ? selectedOption.value : -1);
+    console.log(selectedOption.value);
+  };
 
   return (
     <div>
-      <Navbar />
-      <div className="ml-48 bg-slate-100">
-        <TraineesSearch />
+      <div className="ml-12">
+        <CourseSearch
+          onSubmitName={handleNameSubmit}
+          onSubmitId={handleIdSubmit}
+          onSelectSynced={handleSelectSynced}
+        />
         <div>
           <div
             className={`overflow-x-auto  overflow-y-auto w-full h-[690px] mt-0 `}

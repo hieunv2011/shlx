@@ -41,3 +41,63 @@
   justify-content: center;
   align-items: center;
 }
+/* Tùy chỉnh thanh cuộn cho phần tử có lớp .custom-scrollbar */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 10px; /* Chiều rộng của thanh cuộn */
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: #18181b; /* Màu nền của track */
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #888; /* Màu của thumb */
+  border-radius: 5px; /* Bo tròn các góc của thumb */
+  max-height: 2px; 
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #555; /* Màu của thumb khi hover */
+}
+
+/* Bo tròn đầu và cuối của scrollbar (chỉ hoạt động trên một số trình duyệt) */
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  border-radius: 10px; /* Tăng bán kính bo tròn để làm tròn hơn */
+}
+
+.custom-scrollbar::-webkit-scrollbar-button:start:decrement,
+.custom-scrollbar::-webkit-scrollbar-button:end:increment  {
+  display: block;
+  height: 0;
+  background: transparent;
+}
+
+.fade-enter {
+  opacity: 0;
+}
+.fade-enter-active {
+  opacity: 1;
+  transition: opacity 300ms;
+}
+.fade-exit {
+  opacity: 1;
+}
+.fade-exit-active {
+  opacity: 0;
+  transition: opacity 300ms;
+}
+@keyframes slideIn {
+  from {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.datepicker-animation {
+  animation: slideIn 0.5s ease-in-out;
+}
+

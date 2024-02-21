@@ -1,18 +1,27 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { Navbar, TraineesSearch } from "../components";
+import { Navbar, TeacherSearch, TraineesSearch } from "../components";
 import { Link } from "react-router-dom";
 import { AiOutlineCloseCircle, AiOutlineCheckCircle } from "react-icons/ai";
 
 const TeacherList = () => {
   const [data, setData] = useState([]);
+  const [name,setName] =useState("");
+  const [cmt,setCmt] =useState("");
+  const [gplx,setGplx]=useState("");
+  const [gpdt,setGpdt]=useState("");
+  const [selectedSyncOption, setSelectedSyncOption] = useState(-1);
+  const baseUrl="https://jira.shlx.vn/v1/instructors?";
+  const finalUrl=`${baseUrl}name=${name}&id_card=${cmt}&driving_license_no=${gplx}&teaching_license_no=${gpdt}&synced=${selectedSyncOption}`;
+
+  
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [name,cmt,gplx,gpdt,selectedSyncOption]);
   const fetchData = async () => {
     try {
       const token = localStorage.getItem("userToken"); // Replace with your actual token
-      const response = await axios.get(`https://jira.shlx.vn/v1/instructors`, {
+      const response = await axios.get(finalUrl, {
         headers: {
           Authorization: `Bearer ${token}`,
           // Add other headers if needed
@@ -24,12 +33,41 @@ const TeacherList = () => {
       console.error("Error fetching data:", error);
     }
   };
+  const handleNameSubmit = (submittedName) => {
+    setName(submittedName);
+    console.log(submittedName);
+    console.log(finalUrl);
+  };
+
+  const handleCmtSubmit = (submittedCmt) => {
+    setCmt(submittedCmt);
+  };
+
+  const handleGpdtSubmit = (submittedGpdt) => {
+    setGpdt(submittedGpdt);
+  };
+
+  const handleGplxSubmit = (submittedGplx) => {
+    setGplx(submittedGplx);
+  };
+
+  const handleSelectSynced = (selectedOption) => {
+    setSelectedSyncOption(selectedOption.value 
+    );
+    console.log(selectedOption.value);
+    console.log(finalUrl);
+  };
+
   return (
     <div>
-      <Navbar />
-    
-      <div className="ml-48 bg-slate-100">
-      <TraineesSearch/>
+      <TeacherSearch
+      onSubmitName={handleNameSubmit}
+      onSubmitCmt={handleCmtSubmit}
+      onSubmitGpdt={handleGpdtSubmit}
+      onSubmitGplx={handleGplxSubmit}
+      onSelectSynced={handleSelectSynced}
+      />
+      <div className=" ml-12 bg-slate-100">
       <div>
           <div
             className={`overflow-x-auto  overflow-y-auto w-full h-[690px] mt-0 `}
