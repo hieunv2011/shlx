@@ -13,67 +13,62 @@ import {
   TrainnesPopup,
   TraineesSearch,
   Sidebar,
+  Pagination,
 } from "../components";
 import { Link } from "react-router-dom";
 import { useStateContext } from "../contexts/ContextProvider";
 import SplitPane, { Pane } from "split-pane-react";
 import "split-pane-react/esm/themes/default.css";
-import { Pagination, Split } from "uiw";
 
 const Testing = ({ onSelect }) => {
   const [data, setData] = useState([]);
   const { activePopup, setActivePopup } = useStateContext();
   const [isPopupOpen, setIsPopupOpen] = useState(false);
-  const [myVariable, setMyVariable] = useState(1);
   const [name, setName] = useState("");
   const [id, setId] = useState("");
   const [synced, setSynced] = useState(-1);
   const [state, setState] = useState(-1);
   const [course, setCourse] = useState("0");
+
   const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState("");
+
   const [selectedTrainee, setSelectedTrainee] = useState(null);
-  const [sizes, setSizes] = useState([100, "30%", "auto"]);
   const baseUrl = "https://jira.shlx.vn/v1/trainees?";
-  const finalUrl = `${baseUrl}course_id=${course}&province_id=0&rf_card_name=${id}&synced=${synced}&status=${state}&page=${myVariable}&name=${name}`;
+  const finalUrl = `${baseUrl}course_id=${course}&province_id=0&rf_card_name=${id}&synced=${synced}&status=${state}&page=${currentPage}&name=${name}`;
   // const finalUrl = `${baseUrl}course_id=${course}&province_id=0&rf_card_name=${id}&synced=${synced}&status=${state}&page=5&name=${name}`;
   const [searchTerm, setSearchTerm] = useState("");
 
   const togglePopup = () => {
     setIsPopupOpen(isPopupOpen === 0 ? 1 : isPopupOpen === 1 ? 1 : 0);
   };
-  const closePopup = () => {
-    // Khi ấn vào nút đóng popup, chỉ đặt về 0 nếu đang ở trạng thái 1
-    if (isPopupOpen === 1) {
-      setIsPopupOpen(0);
-    }
-  };
 
-  const increaseVariable = () => {
-    setMyVariable(myVariable + 1);
-  };
-
-  const decreaseVariable = () => {
-    setMyVariable(myVariable - 1);
+  const handlePageChange = (newPage) => {
+    setCurrentPage(newPage);
+    console.log(newPage);
   };
 
   // Lấy data
   useEffect(() => {
     fetchData();
-  }, [myVariable, name, id, synced, course, currentPage ]);
+  }, [name, id, synced, course, currentPage]);
 
   const fetchData = async () => {
     try {
       const token = localStorage.getItem("userToken"); // Replace with your actual token
-      const response = await axios.get(finalUrl,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            // Add other headers if needed
-          },
-        }
-      );
+      const response = await axios.get(finalUrl, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          // Add other headers if needed
+        },
+      });
       setData(response.data.items);
       console.log(response);
+      //
+      const totalCount = response.data.total;
+      setTotalPages(Math.ceil(totalCount / 50));
+      console.log(totalPages);
+      //
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -125,7 +120,7 @@ const Testing = ({ onSelect }) => {
   return (
     <div className="flex flex-col">
       <div className="flex pl-0 flex-col">
-        <div className="bg-slate-100 pl-16">
+        <div className="bg-slate-100 pl-16 min-h-screen">
           <div className="ml-8 h-24 mt-6 ">
             <TraineesSearch
               onSubmitName={handleNameSubmit}
@@ -135,7 +130,7 @@ const Testing = ({ onSelect }) => {
               onSubmitCourse={handleSubmitCourse}
             />
           </div>
-          <div className="bg-white min-w-screen ml-8 mr-0 rounded-xl max-w-[1920px]">
+          <div className="bg-white ml-8 mr-0 rounded-xl">
             {/* <Split
               mode="horizontal"
               style={{
@@ -143,9 +138,9 @@ const Testing = ({ onSelect }) => {
               }}
               className="w-[1327px] border border-inherit ml-8 "
             > */}
-            <div className="w-full mb-16 rounded-xl">
-              <div className="w-full mt-0 p-5 mr-5">
-                <table className="border border-black">
+            <div className="w-full mb-10 rounded-xl">
+              <div className="w-full mt-0 p-5 mr-5 overflow-y-auto">
+                <table className="border border-black min-w-full">
                   <thead>
                     <tr>
                       <th className="w-12 text-slate-600"></th>
@@ -322,8 +317,14 @@ const Testing = ({ onSelect }) => {
                   </tbody>
                 </table>
               </div>
+              <div className="flex items-center justify-center">
+                <Pagination
+                  className=""
+                  totalPages={totalPages}
+                  onPageChange={handlePageChange}
+                />
+              </div>
             </div>
-
             {/* <div className={`${isPopupOpen ? "block" : "hidden"}`}>
                 {activePopup && selectedTrainee && (
                   <div className=" border border-inherit">

@@ -1,119 +1,119 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
-import { Footer, Navbar, DatDeviceSearch } from "../components";
+import { Footer, Navbar, DatDeviceSearch,Pagination } from "../components";
 import { CiEdit } from "react-icons/ci";
 
 const DatDevice = () => {
   const [data, setData] = useState([]);
   const [name, setName] = useState("");
-  const [id, setId]= useState("");
-  const [mainboard,setMainboard]=useState("");
+  const [id, setId] = useState("");
+  const [mainboard, setMainboard] = useState("");
   const [state, setState] = useState(-1);
+  const [totalPages, setTotalPages] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const baseUrl = "https://jira.shlx.vn/v1/tracking_devices?";
-  const finalUrl = `${baseUrl}name=${name}&status=${state}&serial_no=${id}&board_serial=${mainboard}`;
-  
+  const finalUrl = `${baseUrl}name=${name}&status=${state}&serial_no=${id}&board_serial=${mainboard}&page=${currentPage}`;
+
   useEffect(() => {
     fetchData();
-  }, [name,state,id,mainboard]);
+  }, [name, state, id, mainboard,currentPage]);
   const fetchData = async () => {
     try {
       const token = localStorage.getItem("userToken"); // Replace with your actual token
-      const response = await axios.get(finalUrl,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            // Add other headers if needed
-          },
-        }
-      );
+      const response = await axios.get(finalUrl, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          // Add other headers if needed
+        },
+      });
       setData(response.data.items);
       console.log(response);
+      const totalCount = response.data.total;
+      setTotalPages(Math.ceil(totalCount / 50));
+      console.log(totalPages);
     } catch (error) {
       console.error("Error fetching data:", error);
-    }
-  };
-  const handlePageChange = (newPage) => {
-    setCurrentPage(newPage);
-  };
-
-  const handlePageClick = (change) => {
-    const newPage = currentPage + change;
-    if (newPage >= 1) {
-      setCurrentPage(newPage);
     }
   };
   const handleNameSubmit = (submittedName) => {
     setName(submittedName);
   };
-  const handleIdSubmit =(submittedId) =>{
+  const handleIdSubmit = (submittedId) => {
     setId(submittedId);
   };
-  const handleMainboardSubmit=(submittedMainboard) =>{
+  const handleMainboardSubmit = (submittedMainboard) => {
     setMainboard(submittedMainboard);
     console.log(finalUrl);
   };
   const handleSelectStatus = (selectedOption) => {
-    
     setState(
       selectedOption && selectedOption.value !== undefined
         ? selectedOption.value
         : -1
     );
   };
+  const handlePageChange = (newPage) => {
+    setCurrentPage(newPage);
+    console.log(newPage);
+  };
   
+
   return (
-    <div>
-      <div className="ml-8">
-        <DatDeviceSearch
-        onSubmitName={handleNameSubmit}
-        onSubmitId={handleIdSubmit}
-        onSubmitMainboard={handleMainboardSubmit}
-        onSelectStatus={handleSelectStatus}
-         />
-        <div>
-          <div
-            className="overflow-y-auto w-full h-[690px] mt-0"
-          >
+    <div className="flex flex-col">
+      <div className="bg-slate-100 pl-16 min-h-screen">
+        <div className="ml-8 h-24 mt-6 ">
+          <DatDeviceSearch
+            onSubmitName={handleNameSubmit}
+            onSubmitId={handleIdSubmit}
+            onSubmitMainboard={handleMainboardSubmit}
+            onSelectStatus={handleSelectStatus}
+          />
+        </div>
+
+        <div div className="bg-white ml-8 mr-0 rounded-xl">
+          <div className="overflow-y-auto w-full h-[690px] mt-0 rounded-xl p-5 mr-5">
             <table className="border-collapse border w-full">
               <thead
-                className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400 
+                className="text-xs text-gray-700 uppercase first-letter dark:bg-gray-700 dark:text-gray-400 
               justify-center items-center"
               >
                 <tr>
-                  <th scope="col" className="px-6 py-3"></th>
-                  <th scope="col" className="px-6 py-3">
+                  <th
+                    scope="col"
+                    className="px-6 py-3 border border-black"
+                  ></th>
+                  <th scope="col" className="px-6 py-3 border border-black">
                     TÊN
                   </th>
-                  <th scope="col" className="py-3">
+                  <th scope="col" className="py-3 border border-black">
                     SERIAL
                   </th>
-                  <th scope="col" className="px-6 py-3">
+                  <th scope="col" className="px-6 py-3 border border-black">
                     BOARD
                   </th>
-                  <th scope="col" className="px-6 py-3">
+                  <th scope="col" className="px-6 py-3 border border-black">
                     VERSION
                   </th>
-                  <th scope="col" className="px-6 py-3">
+                  <th scope="col" className="px-6 py-3 border border-black">
                     NEW VERSION
                   </th>
-                  <th scope="col" className="px-6 py-3">
+                  <th scope="col" className="px-6 py-3 border border-black">
                     XE
                   </th>
-                  <th scope="col" className="px-6 py-3">
+                  <th scope="col" className="px-6 py-3 border border-black">
                     MODEL
                   </th>
-                  <th scope="col" className="px-6 py-3">
+                  <th scope="col" className="px-6 py-3 border border-black">
                     HẠNG
                   </th>
-                  <th scope="col" className="px-6 py-3">
+                  <th scope="col" className="px-6 py-3 border border-black">
                     SIM
                   </th>
-                  <th scope="col" className="px-6 py-3">
+                  <th scope="col" className="px-6 py-3 border border-black">
                     TRẠNG THÁI
                   </th>
-                  <th scope="col" className="px-6 py-3">
+                  <th scope="col" className="px-6 py-3 border border-black">
                     CHỈNH SỬA
                   </th>
                 </tr>
@@ -121,41 +121,51 @@ const DatDevice = () => {
               <tbody className="text-sm ">
                 {data.map((element, index) => (
                   <tr key={index} className="">
-                    <td className="py-4 px-1 font-semibold text-gray-900 dark:text-white">
+                    <td className="py-4 px-1 font-semibold text-gray-900 dark:text-white border border-black">
                       <ul className="flex items-center justify-center">
                         {index + 1}
                       </ul>
                     </td>
-                    <td className="px-1 font-semibold text-gray-900 dark:text-white border">
+                    <td className="px-1 font-semibold text-gray-900 dark:text-white border border-black">
                       <Link className="text-blue-800 cursor-pointer ">
                         {element.name}
                       </Link>
                     </td>
-                    <td className="px-1 border  justify-center">
+                    <td className="px-1 border border-black justify-center">
                       {element.serial_no}
                     </td>
-                    <td className="border px-1 ">{element.board_serial}</td>
-                    <td className="border px-1">{element.firmware}</td>
-                    <td className="border px-1">
+                    <td className="border px-1 border-black ">
+                      {element.board_serial}
+                    </td>
+                    <td className="border px-1 border-black ">
+                      {element.firmware}
+                    </td>
+                    <td className="border px-1 border-black ">
                       {element.config && parseConfig(element.config)}
                     </td>
-                    <td className="px-1 border">{element.vehicle_plate}</td>
-                    <td className="px-1 border">{element.vehicle_model}</td>
-                    <td className="px-1 border">{element.vehicle_hang}</td>
-                    <td className="px-1 border">{element.sim}</td>
-                    <td className="border">
+                    <td className="px-1 border border-black ">
+                      {element.vehicle_plate}
+                    </td>
+                    <td className="px-1 border border-black ">
+                      {element.vehicle_model}
+                    </td>
+                    <td className="px-1 border border-black ">
+                      {element.vehicle_hang}
+                    </td>
+                    <td className="px-1 border border-black ">{element.sim}</td>
+                    <td className="border border-black px-4">
                       <div
-                        className={`text-white font-semibold border m-2 ${
-                          element.status ? "bg-green-500" : "bg-orange-500"
+                        className={`rounded-lg text-white text-xs flex items-center justify-center font-bold ${
+                          element.status ? "bg-green-500" : "bg-orange-600"
                         }`}
                       >
                         {element.status ? "Đang hoạt động" : "Không hoạt động"}
                       </div>
                     </td>
-                    <td className="px-1 border">
+                    <td className="px-1 border border-black ">
                       <button
                         type="button"
-                        className="text-xl rounded-full p-3 hover:bg-gray-200 mt-4 block text-blue-800"
+                        className="flex justify-center items-center text-xl rounded-full p-3 hover:bg-gray-200 mt-4 text-blue-800"
                       >
                         <CiEdit />
                       </button>
@@ -165,102 +175,14 @@ const DatDevice = () => {
               </tbody>
             </table>
           </div>
+          <div className="flex items-center justify-center mb-10">
+                <Pagination
+                  className=""
+                  totalPages={totalPages}
+                  onPageChange={handlePageChange}
+                />
+          </div>
         </div>
-        {/* <div>
-          <nav className="ml-[800px]">
-            <ul class="flex items-center -space-x-px h-10 text-base">
-              <li>
-                <a
-                  onClick={() => handlePageClick(-1)}
-                  href="#"
-                  class="flex items-center justify-center px-1 h-10 ms-0 leading-tight text-gray-500 bg-white border border-e-0 border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-                >
-                  <span class="sr-only">Previous</span>
-                  <svg
-                    class="w-3 h-3 rtl:rotate-180"
-                    aria-hidden="true"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 6 10"
-                  >
-                    <path
-                      stroke="currentColor"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M5 1 1 5l4 4"
-                    />
-                  </svg>
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#"
-                  class="flex items-center justify-center px-1 h-10 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-                >
-                  1
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#"
-                  class="flex items-center justify-center px-1 h-10 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-                >
-                  2
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#"
-                  aria-current="page"
-                  class="z-10 flex items-center justify-center px-1 h-10 leading-tight text-blue-600 border border-blue-300 bg-blue-50 hover:bg-blue-100 hover:text-blue-700 dark:border-gray-700 dark:bg-gray-700 dark:text-white"
-                >
-                  3
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#"
-                  class="flex items-center justify-center px-1 h-10 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-                >
-                  4
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#"
-                  class="flex items-center justify-center px-1 h-10 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-                >
-                  5
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#"
-                  onClick={() => handlePageChange(+1)}
-                  class="flex items-center justify-center px-1 h-10 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-                >
-                  <span class="sr-only">Next</span>
-                  <svg
-                    class="w-3 h-3 rtl:rotate-180"
-                    aria-hidden="true"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 6 10"
-                  >
-                    <path
-                      stroke="currentColor"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="m1 9 4-4-4-4"
-                    />
-                  </svg>
-                </a>
-              </li>
-            </ul>
-          </nav>
-        </div> */}
       </div>
     </div>
   );

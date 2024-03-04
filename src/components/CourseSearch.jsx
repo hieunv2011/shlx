@@ -92,13 +92,13 @@ const CourseSearch = ({ onSubmitName, onSubmitId, onSelectStatus,onSubmitCourse,
         />
       </div>
       <button
-        className="px-4 py-2 mt-7 bg-blue-500 text-white rounded-md cursor-pointer"
+        className="px-4 py-2 bg-blue-500 text-white rounded-md cursor-pointer"
         onClick={handleSubmit}
       >
         Tìm kiếm
       </button>
       <button
-        className="px-4 py-2 mt-7 bg-blue-500 text-white rounded-md cursor-pointer"
+        className="px-4 py-2 bg-blue-500 text-white rounded-md cursor-pointer"
         onClick={handleReset}
       >
         Mặc định

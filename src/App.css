@@ -101,3 +101,15 @@
   animation: slideIn 0.5s ease-in-out;
 }
 
+.leaflet-control {
+  z-index: 0 !important;
+}
+
+.leaflet-pane {
+  z-index: 0 !important;
+}
+
+.leaflet-top,
+.leaflet-bottom {
+  z-index: 0 !important;
+}

@@ -13,3 +13,4 @@ export {default as DatDeviceSearch} from './DatDeviceSearch';
 export {default as TrainningCarSearch} from './TrainningCarSearch';
 export {default as Pagination} from './Pagination';
 export {default as TeacherSearch} from './TeacherSearch';
+export {default as Map } from './Map';

@@ -1,14 +1,12 @@
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect } from "react";
 
-const Pagination = ({totalPages,onPageChange}) => {
+const Pagination = ({ totalPages, onPageChange }) => {
   const [currentPage, setCurrentPage] = useState(1);
 
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
     onPageChange(pageNumber);
   };
-
-  // console.log(totalPages);
 
   const renderPageNumbers = () => {
     const pageNumbers = [];
@@ -17,10 +15,12 @@ const Pagination = ({totalPages,onPageChange}) => {
         <li key={i}>
           <a
             href="#"
-            className={`flex items-center justify-center px-4 h-10 leading-tight text-gray-500 bg-white border border-gray-300 ${
+            className={`flex items-center justify-center px-4 h-10 leading-tight bg-blue border border-gray-300 ${
               currentPage === i
-                ? "text-blue-800 bg-blue-800 border-blue-800 hover:bg-blue-100 hover:text-blue-700 rounded-full"
-                : "hover:bg-gray-100 hover:text-gray-700"
+                ? "text-white bg-blue-800 border-blue-800 hover:bg-blue-100 hover:text-blue-700"
+                : currentPage + 1 === i || currentPage - 1 === i // Kiểm tra trang đang hiển thị và trang trước và sau đó
+                ? "hover:bg-blue-300 hover:text-gray-700"
+                : "text-black hover:bg-gray-100 hover:text-gray-700" // Thêm màu chữ đen khi không phải là trang được chọn hoặc trang liền kề
             }`}
             onClick={() => handlePageChange(i)}
           >
@@ -43,6 +43,7 @@ const Pagination = ({totalPages,onPageChange}) => {
       setCurrentPage(currentPage + 1);
     }
   };
+
   useEffect(() => {
     console.log(currentPage);
   }, [currentPage]);
@@ -54,7 +55,7 @@ const Pagination = ({totalPages,onPageChange}) => {
           <li>
             <a
               href="#"
-              className={`flex items-center justify-center px-4 h-10 ms-0 leading-tight text-gray-500 bg-white border border-gray-300 ${
+              className={`flex items-center justify-center px-4 h-10 ms-0 leading-tight bg-white border border-gray-300 ${
                 currentPage === 1
                   ? "rounded-l-lg cursor-not-allowed"
                   : "rounded-l-lg hover:bg-gray-100 hover:text-gray-700"
@@ -84,7 +85,7 @@ const Pagination = ({totalPages,onPageChange}) => {
           <li>
             <a
               href="#"
-              className={`flex items-center justify-center px-4 h-10 leading-tight text-gray-500 bg-white border border-gray-300 ${
+              className={`flex items-center justify-center px-4 h-10 leading-tight bg-white border border-gray-300 ${
                 currentPage === totalPages
                   ? "rounded-r-lg cursor-not-allowed"
                   : "rounded-r-lg hover:bg-gray-100 hover:text-gray-700"

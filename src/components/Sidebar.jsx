@@ -194,31 +194,32 @@ export const Sidebar = () => {
                           </motion.li>
                         </Link>
 
-                        <Link to="session">
-                        <motion.li
-                          {...framerItem}
-                          className="flex items-center justify-between gap-5 p-5 transiti border-zinc-800 hover:bg-gray-200 hover:border-gray-400 hover:text-black text-white"
-                        >
-                          <motion.span {...framerText(0)}>
-                            <div>Danh sách phiên học</div>
-                          </motion.span>
-                          <motion.div {...framerItem}>
-                            <FaIdCard className="text-2xl" />
-                          </motion.div>
-                        </motion.li>
+                        <Link to="">
+                          <motion.li
+                            {...framerItem}
+                            className="flex items-center justify-between gap-5 p-5 transiti border-zinc-800 hover:bg-gray-200 hover:border-gray-400 hover:text-black text-white"
+                          >
+                            <motion.span {...framerText(0)}>
+                              <div>Danh sách phiên học</div>
+                            </motion.span>
+                            <motion.div {...framerItem}>
+                              <FaIdCard className="text-2xl" />
+                            </motion.div>
+                          </motion.li>
                         </Link>
-                        <motion.li
-                          {...framerItem}
-                          className="flex items-center justify-between gap-5 p-5 transition-all border-b-2 hover-bg-zinc-900 border-zinc-800 hover:bg-gray-200 hover:border-gray-400 hover:text-black text-white"
-                        >
-                          <motion.span {...framerText(0)}>
-                            <div>Giám sát thực hành</div>
-                          </motion.span>
-                          <motion.div {...framerItem}>
-                            <FaUserCircle className="text-2xl" />
-                          </motion.div>
-                        </motion.li>
-
+                        <Link to="/session">
+                          <motion.li
+                            {...framerItem}
+                            className="flex items-center justify-between gap-5 p-5 transition-all border-b-2 hover-bg-zinc-900 border-zinc-800 hover:bg-gray-200 hover:border-gray-400 hover:text-black text-white"
+                          >
+                            <motion.span {...framerText(0)}>
+                              <div>Giám sát thực hành</div>
+                            </motion.span>
+                            <motion.div {...framerItem}>
+                              <FaUserCircle className="text-2xl" />
+                            </motion.div>
+                          </motion.li>
+                        </Link>
                         <motion.li
                           {...framerItem}
                           className="flex items-center justify-between gap-5 p-5 transiti border-zinc-800 hover:bg-gray-200 hover:border-gray-400 hover:text-black text-white"
